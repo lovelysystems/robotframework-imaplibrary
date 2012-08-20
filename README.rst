@@ -16,13 +16,15 @@ To install, just fetch the latest version from PyPI:.
 Usage
 +++++
 
-Setup in the robotframework Settings section::
+Setup in the robotframework Settings section:
 
 ============  ================
   Setting          Value
 ============  ================
 Library          ImapLibrary
 ============  ================
+
+\
 
 These keyword actions are available::
 
