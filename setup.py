@@ -21,7 +21,7 @@ setup(
   author           = 'Lovely Systems GmbH',
   author_email     = 'office@lovelysystems.com',
   url              = 'https://github.com/lovelysystems/robotframework-imaplibrary',
-  license          = 'EPL',
+  license          = 'Apache License 2.0',
   keywords         = 'robotframework testing testautomation imap mail',
   platforms        = 'any',
   zip_safe         = False,
