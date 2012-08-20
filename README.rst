@@ -68,3 +68,9 @@ ${HTML}=        Open Link from Mail         ${LATEST}
 Should Contain  ${HTML}                     Your email address has been updated
 Close Mailbox
 ==============  ==========================  ===================================  ==================================  ============
+
+License
++++++++
+
+The robotframework-imaplibrary is licensed under the `Apache 2.0 License
+<http://www.apache.org/licenses/LICENSE-2.0.html>`_.
