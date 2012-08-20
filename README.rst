@@ -18,7 +18,11 @@ Usage
 
 Setup in the robotframework Settings section::
 
-Library       ImapLibrary
++---------+-------------+
+| Setting | Value       |
++=========+=============+
+| Library   ImapLibrary |
++---------+-------------+
 
 These keyword actions are available::
 
@@ -53,11 +57,16 @@ These keyword actions are available::
 
 Here is an example of how to use the library::
 
-==============  ==========================  ===================================  ==================================  ===========
-Action          Argument                    Argument                             Argument                            Argument
-==============  ==========================  ===================================  ==================================  ===========
-Open Mailbox    server=imap.googlemail.com  user=mymail@googlemail.com           password=mysecretpassword
-${LATEST}=      Wait for Mail               fromEmail=noreply@register.com       toEmail=mymailalias@googlemail.com  timeout=150
-${HTML}=        Open Link from Mail         ${LATEST}
-Should Contain  ${HTML}                     Your email address has been updated
-Close Mailbox
++----------------+----------------------------+-------------------------------------+------------------------------------+-------------+
+| Action         | Argument                   | Argument                            | Argument                           | Argument    |
++================+============================+=====================================+====================================+=============+
+| Open Mailbox   | server=imap.googlemail.com | user=mymail@googlemail.com          | password=mysecretpassword          |             |
++----------------+----------------------------+-------------------------------------+------------------------------------+-------------+
+| ${LATEST}=     | Wait for Mail              | fromEmail=noreply@register.com      | toEmail=mymailalias@googlemail.com | timeout=150 |
++----------------+----------------------------+-------------------------------------+------------------------------------+-------------+
+| ${HTML}=       | Open Link from Mail        | ${LATEST}                           |                                    |             |
++----------------+----------------------------+-------------------------------------+------------------------------------+-------------+
+| Should Contain | ${HTML}                    | Your email address has been updated |                                    |             |
++----------------+----------------------------+-------------------------------------+------------------------------------+-------------+
+| Close Mailbox  |                            |                                     |                                    |             |
++----------------+----------------------------+-------------------------------------+------------------------------------+-------------+
