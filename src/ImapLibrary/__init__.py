@@ -26,7 +26,7 @@ class ImapLibrary(object):
         self.imap.login(user, password)
         self.imap.select()
 
-    def wait_for_mail(self, fromEmail, toEmail, timeout=60):
+    def wait_for_mail(self, fromEmail=None, toEmail=None, timeout=60):
         """
         Wait for an incoming mail from a specific sender to
         a specific mail receiver. Check the mailbox every 10
@@ -36,12 +36,10 @@ class ImapLibrary(object):
         `timeout` sets the maximum waiting time until an error
         is raised.
         """
-        self.fromEmail = fromEmail
-        self.toEmail = toEmail
         timeout = int(timeout)
         while (timeout > 0):
             self.imap.recent()
-            self.mails = self._check_emails()
+            self.mails = self._check_emails(fromEmail, toEmail)
             if len(self.mails) > 0:
                 return self.mails[-1]
             timeout -= 10
@@ -70,8 +68,15 @@ class ImapLibrary(object):
         """
         self.imap.close()
 
-    def _check_emails(self):
-        type, msgnums = self.imap.search(None,
-                                         'FROM', self.fromEmail,
-                                         'TO', self.toEmail)
+    def _check_emails(self, fromEmail, toEmail):
+        if fromEmail and toEmail:
+            type, msgnums = self.imap.search(None,
+                                             'FROM', fromEmail,
+                                             'TO', toEmail)
+        elif fromEmail:
+            type, msgnums = self.imap.search(None, 'FROM', fromEmail)
+        elif toEmail:
+            type, msgnums = self.imap.search(None, 'TO', toEmail)
+        else:
+            type, msgnums = self.imap.search(None, 'UNSEEN')
         return msgnums[0].split()
