@@ -17,8 +17,8 @@ Usage
 +++++
 
 API documentation can be found at
-`http://lovelysystems.github.com/robotframework-ioslibrary/IOSLibrary.html
-<http://lovelysystems.github.com/robotframework-ioslibrary/IOSLibrary.html>`_,
+`http://lovelysystems.github.com/robotframework-imaplibrary/ImapLibrary.html
+<http://lovelysystems.github.com/robotframework-imaplibrary/ImapLibrary.html>`_,
 
 License
 +++++++

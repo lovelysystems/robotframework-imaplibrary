@@ -22,11 +22,11 @@ setup(
   author_email     = 'office@lovelysystems.com',
   url              = 'https://github.com/lovelysystems/robotframework-imaplibrary',
   license          = 'EPL',
-  keywords         = 'robotframework testing testautomation imap mail calabash',
+  keywords         = 'robotframework testing testautomation imap mail',
   platforms        = 'any',
   zip_safe         = False,
   classifiers      = CLASSIFIERS.splitlines(),
   package_dir      = {'' : 'src'},
-  install_requires = ['robotframework', 'requests'],
+  install_requires = ['robotframework'],
   packages         = ['ImapLibrary'],
 )
