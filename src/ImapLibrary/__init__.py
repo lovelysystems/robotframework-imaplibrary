@@ -52,27 +52,17 @@ class ImapLibrary(object):
     def open_link_from_mail(self, mailNumber, linkNumber=0):
         """
         Find a link in an email body and open the link.
+        Returns the link's html.
 
-        ˚linkNumber` declares which link shall be opened (link
+        `linkNumber` declares which link shall be opened (link
         index in body text)
         """
         body = self.imap.fetch(mailNumber, '(BODY[TEXT])')[1][0][1].decode('quoted-printable')
         urls = re.findall(r'href=[\'"]?([^\'" >]+)', body)
         if len(urls) > linkNumber:
-            self.openedURL = urllib2.urlopen(urls[linkNumber])
+            return urllib2.urlopen(urls[linkNumber]).read()
         else:
             raise AssertionError("Link number %i not found!" % linkNumber)
-
-    def opened_link_contains(self, string):
-        """
-        Check if a text is contained in the body of a previously
-        opened link. Raises an error if text does not appear.
-
-        'string' declares the text which should be contained in the body.
-        """
-        body = self.openedURL.read()
-        if not string in body:
-            raise AssertionError("'%s' not contained in response!" % string)
 
     def close_mailbox(self):
         """
