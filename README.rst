@@ -18,11 +18,11 @@ Usage
 
 Setup in the robotframework Settings section::
 
-+---------+-------------+
-| Setting | Value       |
-+=========+=============+
-| Library   ImapLibrary |
-+---------+-------------+
+============  ================
+  Setting          Value
+============  ================
+Library          ImapLibrary
+============  ================
 
 These keyword actions are available::
 
