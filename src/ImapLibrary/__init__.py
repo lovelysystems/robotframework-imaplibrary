@@ -47,16 +47,26 @@ class ImapLibrary(object):
                 time.sleep(10)
         raise AssertionError("No mail received within time")
 
+    def get_links_from_email(self, mailNumber):
+        '''
+        Finds all links in an email body and returns them
+
+        `mailNumber` is the index number of the mail to open
+        '''
+        body = self.imap.fetch(mailNumber, '(BODY[TEXT])')[1][0][1].decode('quoted-printable')
+        return re.findall(r'href=[\'"]?([^\'" >]+)', body)
+
     def open_link_from_mail(self, mailNumber, linkNumber=0):
         """
         Find a link in an email body and open the link.
         Returns the link's html.
 
+        `mailNumber` is the index number of the mail to open
         `linkNumber` declares which link shall be opened (link
         index in body text)
         """
-        body = self.imap.fetch(mailNumber, '(BODY[TEXT])')[1][0][1].decode('quoted-printable')
-        urls = re.findall(r'href=[\'"]?([^\'" >]+)', body)
+        urls = self.get_links_from_email(mailNumber)
+
         if len(urls) > linkNumber:
             return urllib2.urlopen(urls[linkNumber]).read()
         else:

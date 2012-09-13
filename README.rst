@@ -46,6 +46,12 @@ These keyword actions are available::
             - timeout:   the timeout how long the mailbox shall check emails
                          in seconds (defaults to 60 seconds)
 
+    Get Links From Email:
+        Finds all links in an email body and returns them
+
+        Arguments:
+            - mailNumber: is the index number of the mail to open
+
     Open Link from Mail:
         Find a link in an email body and open the link. Returns the links' html.
         Arguments:
