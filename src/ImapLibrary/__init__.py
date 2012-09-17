@@ -56,7 +56,7 @@ class ImapLibrary(object):
         body = self.imap.fetch(mailNumber, '(BODY[TEXT])')[1][0][1].decode('quoted-printable')
         return re.findall(r'href=[\'"]?([^\'" >]+)', body)
 
-    def open_link_from_mail(self, mailNumber, linkNumber=0):
+    def open_link_from_mail(self, mailNumber, linkNumber=0, headers={}):
         """
         Find a link in an email body and open the link.
         Returns the link's html.
@@ -68,7 +68,8 @@ class ImapLibrary(object):
         urls = self.get_links_from_email(mailNumber)
 
         if len(urls) > linkNumber:
-            return urllib2.urlopen(urls[linkNumber]).read()
+            request = urllib2.Request(urls[linkNumber], headers=headers)
+            return urllib2.urlopen(request).read()
         else:
             raise AssertionError("Link number %i not found!" % linkNumber)
 
