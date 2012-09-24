@@ -1,0 +1,83 @@
+To get a valid mail account we have to set these environment variables
+to get the test running. We recommend to use a google account as it supports
+the plus notation (someone+111@gmail.com), which is needed for this test::
+
+    export IMAPLIBRARY_TEST_SERVER=imap.googlemail.com
+    export IMAPLIBRARY_TEST_USER=yourgoogleaccount@gmail.com
+    export IMAPLIBRARY_TEST_PASSWORD=yourgooglepassword
+
+The test gets the email account data from the environment variables::
+
+    >>> import os
+    >>> server = os.environ['IMAPLIBRARY_TEST_SERVER']
+    >>> user = os.environ['IMAPLIBRARY_TEST_USER']
+    >>> password = os.environ['IMAPLIBRARY_TEST_PASSWORD']
+
+Prepare to plus notation for the receiver email address::
+
+    >>> import time
+    >>> timestamp = int(time.time() * 1000)
+    >>> split = user.split("@")
+    >>> fromEmail = user
+    >>> toEmail = '%s+%s@%s' % (split[0], timestamp, split[1])
+
+Let's prepare an email containing some links. The sender and the receiver are
+the same::
+
+    >>> import smtplib
+    >>> message = """From: From ImapLibraryTest <%s>
+    ... To: To Tester <%s>
+    ... Subject: E-Mail-Test %s
+    ...
+    ... This is a test email message with two links.
+    ... <a href="http://www.google.de">Link 1</a>
+    ... <a href="http://www.lovelysystems.com">Link 2</a>
+    ... """ % (fromEmail, toEmail, timestamp)
+
+Open the mailbox::
+
+    >>> from ImapLibrary import ImapLibrary
+    >>> imap = ImapLibrary()
+    >>> imap.open_mailbox(server, user, password)
+
+Now let's send the email with the same account::
+
+    >>> smtpObj = smtplib.SMTP('smtp.gmail.com')
+    >>> ignore = smtpObj.ehlo()
+    >>> ignore = smtpObj.starttls()
+    >>> ignore = smtpObj.ehlo()
+    >>> ignore = smtpObj.login(user, password)
+    >>> smtpObj.sendmail(fromEmail, [toEmail], message)
+    {}
+
+With the wait_for_mail method we should get an email sent to the specific
+timestamped address. The timeout specifies the time we wait for the email
+to be delivered. The method returns the mail number in the mail box::
+
+    >>> mailNr = imap.wait_for_mail(toEmail=toEmail, timeout=60)
+    >>> mailNr is not None
+    True
+
+We can get the links of that mail number::
+
+    >>> imap.get_links_from_email(mailNr)
+    ['http://www.google.de', 'http://www.lovelysystems.com']
+
+And we can get the content of the link::
+
+    >>> imap.open_link_from_mail(mailNr, 0)
+    '<...html...Google...</html>'
+
+We can also wait for an email from a specific address with the fromEmail
+parameter. If there is no email from that specific sender, we get an
+AssertionError::
+
+    >>> imap.wait_for_mail(fromEmail="thisoneneversentamail@lovelysystems.com",
+    ...                    timeout=10)
+    Traceback (most recent call last):
+    ...
+    AssertionError: No mail received within time
+
+Finally we can close the mail box again::
+
+    >>> imap.close_mailbox()

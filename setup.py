@@ -28,5 +28,6 @@ setup(
   classifiers      = CLASSIFIERS.splitlines(),
   package_dir      = {'' : 'src'},
   install_requires = ['robotframework'],
+  extras_require = dict(test=['zope.testing']),
   packages         = ['ImapLibrary'],
 )
