@@ -2,8 +2,8 @@
 Changes for robotframework-imaplibrary
 ======================================
 
-unreleased
-==========
+2012/09/25 0.0.5
+================
 
  - added buildout environment and unit test
 

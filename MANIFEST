@@ -2,4 +2,5 @@
 README.rst
 setup.py
 src/ImapLibrary/__init__.py
+src/ImapLibrary/tests.py
 src/ImapLibrary/version.py
