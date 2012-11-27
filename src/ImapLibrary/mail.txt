@@ -78,6 +78,22 @@ AssertionError::
     ...
     AssertionError: No mail received within time
 
+We can also wait for unread mails::
+
+    >>> ig = smtpObj.sendmail(fromEmail, [toEmail], message)
+    >>> ig = smtpObj.sendmail(fromEmail, [toEmail], message)
+    >>> mailNr = imap.wait_for_mail(timeout=10)
+    >>> mailNr is not None
+    True
+    
+We can mark the mails as read::
+
+    >>> imap.mark_as_read()
+    >>> imap.wait_for_mail(timeout=10)
+    Traceback (most recent call last):
+    ...
+    AssertionError: No mail received within time
+
 Finally we can close the mail box again::
 
     >>> imap.close_mailbox()

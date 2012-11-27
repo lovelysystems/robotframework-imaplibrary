@@ -2,6 +2,11 @@
 Changes for robotframework-imaplibrary
 ======================================
 
+unreleased
+==========
+
+ - mark mails as read
+
 2012/09/25 0.0.5
 ================
 
