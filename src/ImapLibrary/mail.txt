@@ -94,6 +94,13 @@ We can mark the mails as read::
     ...
     AssertionError: No mail received within time
 
+Read mails::
+
+    >>> ig = smtpObj.sendmail(fromEmail, [toEmail], message)
+    >>> latest = imap.wait_for_mail(timeout=10)
+    >>> print imap.get_email_body(latest)
+    This is a test email ...
+
 Finally we can close the mail box again::
 
     >>> imap.close_mailbox()
