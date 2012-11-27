@@ -53,7 +53,7 @@ class ImapLibrary(object):
 
         `mailNumber` is the index number of the mail to open
         '''
-        body = self.imap.fetch(mailNumber, '(BODY[TEXT])')[1][0][1].decode('quoted-printable')
+        body = self.get_email_body(mailNumber)
         return re.findall(r'href=[\'"]?([^\'" >]+)', body)
 
     def open_link_from_mail(self, mailNumber, linkNumber=0):
@@ -84,6 +84,15 @@ class ImapLibrary(object):
         """
         for mail in self.mails:
             self.imap.store(mail, '+FLAGS', '\SEEN')
+
+    def get_email_body(self, mailNumber):
+        """
+        Returns an email body
+
+        `mailNumber` is the index number of the mail to open
+        """
+        body = self.imap.fetch(mailNumber, '(BODY[TEXT])')[1][0][1].decode('quoted-printable')
+        return body
 
     def _check_emails(self, fromEmail, toEmail):
         if fromEmail and toEmail:

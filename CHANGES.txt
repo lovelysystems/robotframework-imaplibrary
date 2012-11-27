@@ -5,6 +5,11 @@ Changes for robotframework-imaplibrary
 unreleased
 ==========
 
+2012/11/27 0.0.7
+================
+
+ - get email body
+
 2012/11/27 0.0.6
 ================
 

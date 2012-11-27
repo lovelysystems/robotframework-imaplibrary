@@ -59,6 +59,14 @@ These keyword actions are available::
             linkNumber: the index of the link to open
                         (defaults to 0, which is the first link)
 
+    Get Email body:
+        Returns an email body
+        Arguments:
+            mailNumber: the number of the email to check for a link
+
+    Mark as read:
+        Mark all received mails as read
+
     Close Mailbox:
         Close the mailbox after finishing all mail activities of a user.
 
