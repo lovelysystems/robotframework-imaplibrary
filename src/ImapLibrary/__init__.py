@@ -78,6 +78,13 @@ class ImapLibrary(object):
         """
         self.imap.close()
 
+    def mark_as_read(self):
+        """
+        Mark all received mails as read
+        """
+        for mail in self.mails:
+            self.imap.store(mail, '+FLAGS', '\SEEN')
+
     def _check_emails(self, fromEmail, toEmail):
         if fromEmail and toEmail:
             type, msgnums = self.imap.search(None,
