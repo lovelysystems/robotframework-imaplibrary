@@ -68,7 +68,7 @@ class ImapLibrary(object):
         urls = self.get_links_from_email(mailNumber)
 
         if len(urls) > linkNumber:
-            return urllib2.urlopen(urls[linkNumber]).read()
+            return unicode(urllib2.urlopen(urls[linkNumber]).read(), 'utf-8')
         else:
             raise AssertionError("Link number %i not found!" % linkNumber)
 
