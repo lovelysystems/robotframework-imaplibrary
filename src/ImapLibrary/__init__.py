@@ -26,7 +26,8 @@ class ImapLibrary(object):
         self.imap.login(user, password)
         self.imap.select()
 
-    def wait_for_mail(self, fromEmail=None, toEmail=None, timeout=60):
+    def wait_for_mail(self, fromEmail=None, toEmail=None, status=None,
+                      timeout=60):
         """
         Wait for an incoming mail from a specific sender to
         a specific mail receiver. Check the mailbox every 10
@@ -39,7 +40,7 @@ class ImapLibrary(object):
         timeout = int(timeout)
         while (timeout > 0):
             self.imap.recent()
-            self.mails = self._check_emails(fromEmail, toEmail)
+            self.mails = self._check_emails(fromEmail, toEmail, status)
             if len(self.mails) > 0:
                 return self.mails[-1]
             timeout -= 10
@@ -68,7 +69,13 @@ class ImapLibrary(object):
         urls = self.get_links_from_email(mailNumber)
 
         if len(urls) > linkNumber:
-            return unicode(urllib2.urlopen(urls[linkNumber]).read(), 'utf-8')
+            resp = urllib2.urlopen(urls[linkNumber])
+            content_type = resp.headers.getheader('content-type')
+            if content_type:
+                enc = content_type.split('charset=')[-1]
+                return unicode(resp.read(), enc)
+            else:
+                return resp.read()
         else:
             raise AssertionError("Link number %i not found!" % linkNumber)
 
@@ -94,15 +101,19 @@ class ImapLibrary(object):
         body = self.imap.fetch(mailNumber, '(BODY[TEXT])')[1][0][1].decode('quoted-printable')
         return body
 
-    def _check_emails(self, fromEmail, toEmail):
-        if fromEmail and toEmail:
-            type, msgnums = self.imap.search(None,
-                                             'FROM', fromEmail,
-                                             'TO', toEmail)
-        elif fromEmail:
-            type, msgnums = self.imap.search(None, 'FROM', fromEmail)
-        elif toEmail:
-            type, msgnums = self.imap.search(None, 'TO', toEmail)
-        else:
-            type, msgnums = self.imap.search(None, 'UNSEEN')
+    def _criteria(self, fromEmail, toEmail, status):
+        crit = []
+        if fromEmail:
+            crit += ['FROM', fromEmail]
+        if toEmail:
+            crit += ['TO', toEmail]
+        if status:
+            crit += [status]
+        if not crit:
+            crit = ['UNSEEN']
+        return crit
+
+    def _check_emails(self, fromEmail, toEmail, status):
+        crit = self._criteria(fromEmail, toEmail, status)
+        type, msgnums = self.imap.search(None, *crit)
         return msgnums[0].split()

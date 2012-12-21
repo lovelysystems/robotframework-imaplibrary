@@ -66,7 +66,7 @@ We can get the links of that mail number::
 And we can get the content of the link::
 
     >>> imap.open_link_from_mail(mailNr, 0)
-    '<...html...Google...</html>'
+    u'<...html...Google...</html>'
 
 We can also wait for an email from a specific address with the fromEmail
 parameter. If there is no email from that specific sender, we get an
@@ -85,7 +85,18 @@ We can also wait for unread mails::
     >>> mailNr = imap.wait_for_mail(timeout=10)
     >>> mailNr is not None
     True
-    
+
+It is possible to filter messages for a specific status. Allowed status are:
+
+ UNSEEN, ALL, MESSAGES, RECENT, UIDNEXT, UIDVALIDITY
+
+The status might be combined with other filters::
+
+    >>> mailNr = imap.wait_for_mail(fromEmail=fromEmail,toEmail=toEmail,
+    ...                             status='UNSEEN', timeout=10)
+    >>> mailNr is not None
+    True
+
 We can mark the mails as read::
 
     >>> imap.mark_as_read()
