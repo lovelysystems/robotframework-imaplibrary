@@ -5,6 +5,9 @@ Changes for robotframework-imaplibrary
 unreleased
 ==========
 
+2012/12/21 0.1.0
+================
+
  - added filter for status to 'wait_for_mail'
 
  - bugfix: use encoding from opened page while 'open_link_from_mail'
