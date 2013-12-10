@@ -2,8 +2,10 @@
 Changes for robotframework-imaplibrary
 ======================================
 
-unreleased
-==========
+2013/12/10 unreleased
+=====================
+
+ - added multipart email capabilities
 
 2012/12/21 0.1.0
 ================
