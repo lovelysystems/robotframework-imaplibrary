@@ -52,6 +52,13 @@ These keyword actions are available::
         Arguments:
             - mailNumber: is the index number of the mail to open
 
+    Get Matches From Email:
+        Finds all occurrences of a regular expression
+
+        Arguments:
+            - mailNumber: is the index number of the mail to open
+            - regexp: a regular expression to find
+
     Open Link from Mail:
         Find a link in an email body and open the link. Returns the links' html.
         Arguments:

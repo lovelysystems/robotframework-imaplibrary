@@ -59,6 +59,13 @@ class ImapLibrary(object):
         body = self.get_email_body(mailNumber)
         return re.findall(r'href=[\'"]?([^\'" >]+)', body)
 
+    def get_matches_from_email(self, mailNumber, regexp):
+        """
+        Finds all occurrences of a regular expression
+        """
+        body = self.get_email_body(mailNumber)
+        return re.findall(regexp, body)
+
     def open_link_from_mail(self, mailNumber, linkNumber=0):
         """
         Find a link in an email body and open the link.
