@@ -41,7 +41,6 @@ class ImapLibrary(object):
         """
         timeout = int(timeout)
         while (timeout > 0):
-            self.imap.recent()
             self.mails = self._check_emails(fromEmail, toEmail, status)
             if len(self.mails) > 0:
                 return self.mails[-1]
