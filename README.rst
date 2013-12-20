@@ -53,6 +53,13 @@ These keyword actions are available::
         Arguments:
             - mailNumber: is the index number of the mail to open
 
+    Get Matches From Email:
+        Finds all occurrences of a regular expression
+
+        Arguments:
+            - mailNumber: is the index number of the mail to open
+            - regexp: a regular expression to find
+
     Open Link from Mail:
         Find a link in an email body and open the link. Returns the links' html.
         Arguments:
@@ -64,6 +71,32 @@ These keyword actions are available::
         Returns an email body
         Arguments:
             mailNumber: the number of the email to check for a link
+
+    Walk Multipart Email
+        Returns the number of parts of a multipart email. Content is stored internally
+        to be used by other multipart keywords. Subsequent calls iterate over the
+        elements, and the various Get Multipart keywords retrieve their contents.
+
+        Arguments:
+            mailNumber: the index number of the mail to open
+
+    Get Multipart Content Type
+        Return the content-type for the current part of a multipart email
+
+    Get Multipart Payload
+        Return the payload for the current part of a multipart email
+
+        Arguments:
+            decode: an optional flag that indicates whether to decoding
+
+    Get Multipart Field Names
+        Return the list of header field names for the current multipart email
+
+    Get Multipart Field
+        Returns the content of a header field 
+
+        Arguments:
+            field: a string such as 'From', 'To', 'Subject', 'Date', etc.
 
     Mark as read:
         Mark all received mails as read
@@ -84,6 +117,29 @@ ${HTML}=        Open Link from Mail         ${LATEST}
 Should Contain  ${HTML}                     Your email address has been updated
 Close Mailbox
 ==============  ==========================  ===================================  ==================================  =============  ============
+
+Here is an example of how to work with multipart emails, ignoring all non content-type='test/html' parts:
+
+==============  ==========================  ===================================  ===================================  ============
+ Action         Argument                    Argument                             Argument                             Argument
+==============  ==========================  ===================================  ===================================  ============
+Open Mailbox    server=imap.googlemail.com  user=mymail@googlemail.com           password=mysecretpassword
+${LATEST}=      Wait for Mail               fromEmail=noreply@register.com       toEmail=mymailalias@googlemail.com   timeout=150
+${parts}=       Walk Multipart Email        ${LATEST}
+@{fields}=      Get Multipart Field Names
+${from}=        Get Multipart Field         From
+${to}=          Get Multipart Field         To
+${subject}=     Get Multipart Field         Subject
+:FOR            ${i}                        IN RANGE                             ${parts}
+\               Walk Multipart Email        ${LATEST}
+\               ${content-type}=            Get Multipart Content Type
+\               Continue For Loop If        '${content-type}' != 'text/html'
+\               ${payload}=                 Get Multipart Payload                decode=True
+\               Should Contain              ${payload}                           Update your email address
+\               ${HTML}=                    Open Link from Mail                  ${LATEST}
+\               Should Contain              ${HTML}                              Your email address has been updated
+Close Mailbox
+==============  ==========================  ===================================  ===================================  ============
 
 License
 +++++++

@@ -3,6 +3,7 @@ import os
 import imaplib
 import time
 import urllib2
+import email
 
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 execfile(os.path.join(THIS_DIR, 'version.py'))
@@ -25,6 +26,7 @@ class ImapLibrary(object):
         self.imap = imaplib.IMAP4_SSL(server, self.port)
         self.imap.login(user, password)
         self.imap.select()
+        self._init_walking_multipart()
 
     def wait_for_mail(self, fromEmail=None, toEmail=None, status=None,
                       timeout=60):
@@ -39,7 +41,6 @@ class ImapLibrary(object):
         """
         timeout = int(timeout)
         while (timeout > 0):
-            self.imap.recent()
             self.mails = self._check_emails(fromEmail, toEmail, status)
             if len(self.mails) > 0:
                 return self.mails[-1]
@@ -56,6 +57,13 @@ class ImapLibrary(object):
         '''
         body = self.get_email_body(mailNumber)
         return re.findall(r'href=[\'"]?([^\'" >]+)', body)
+
+    def get_matches_from_email(self, mailNumber, regexp):
+        """
+        Finds all occurrences of a regular expression
+        """
+        body = self.get_email_body(mailNumber)
+        return re.findall(regexp, body)
 
     def open_link_from_mail(self, mailNumber, linkNumber=0):
         """
@@ -98,8 +106,81 @@ class ImapLibrary(object):
 
         `mailNumber` is the index number of the mail to open
         """
-        body = self.imap.fetch(mailNumber, '(BODY[TEXT])')[1][0][1].decode('quoted-printable')
+        if self._is_walking_multipart(mailNumber):
+            body = self.get_multipart_payload(decode=True)
+        else:
+            body = self.imap.fetch(mailNumber, '(BODY[TEXT])')[1][0][1].decode('quoted-printable')
         return body
+
+    def walk_multipart_email(self, mailNumber):
+        """
+        Returns the number of parts of a multipart email. Content is stored internally
+        to be used by other multipart keywords. Subsequent calls iterate over the
+        elements, and the various Get Multipart keywords retrieve their contents.
+
+        `mailNumber` is the index number of the mail to open
+        """
+        if not self._is_walking_multipart(mailNumber):
+            data = self.imap.fetch(mailNumber, '(RFC822)')[1][0][1]
+            msg = email.message_from_string(data.decode())
+            self._start_walking_multipart(mailNumber, msg)
+
+        try:
+            self._part = next(self._mp_iter)
+        except StopIteration:
+            self._init_walking_multipart()
+            return False
+            
+        # return number of parts
+        return len(self._mp_msg.get_payload())
+
+    def _is_walking_multipart(self, mailNumber):
+        """
+        Check if walking a multipart email is in progress
+        """
+        return self._mp_msg is not None and self._mailNumber == mailNumber
+
+    def _start_walking_multipart(self, mailNumber, msg):
+        self._mailNumber = mailNumber
+        self._mp_msg = msg
+        self._mp_iter = msg.walk()
+
+    def _init_walking_multipart(self):
+        self._mp_msg = None
+        self._part = None
+        self._mailNumber = None
+
+    def get_multipart_content_type(self):
+        """
+        Return the content-type for the current part of a multipart email
+        """
+        return self._part.get_content_type()
+
+    def get_multipart_payload(self, decode=False):
+        """
+        Return the payload for the current part of a multipart email
+
+        decode is an optional flag that indicates whether to decoding
+        """
+        s = self._part.get_payload(decode=decode)
+        charset = self._part.get_content_charset()
+        if charset is not None:
+            return s.decode(charset)
+        return s
+
+    def get_multipart_field_names(self):
+        """
+        Return the list of header field names for the current multipart email
+        """
+        return self._mp_msg.keys()
+
+    def get_multipart_field(self, field):
+        """
+        Returns the content of a header field 
+
+        field is a string such as 'From', 'To', 'Subject', 'Date', etc.
+        """
+        return self._mp_msg[field]
 
     def _criteria(self, fromEmail, toEmail, status):
         crit = []
