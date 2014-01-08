@@ -196,5 +196,7 @@ class ImapLibrary(object):
 
     def _check_emails(self, fromEmail, toEmail, status):
         crit = self._criteria(fromEmail, toEmail, status)
-        type, msgnums = self.imap.search(None, *crit)
+        typ, msgnums = self.imap.search(None, *crit)
+        if typ != 'OK':
+            raise Exception('imap.search error: ' + typ + ', ' + str(msgnums) + ' criterion=' + str(crit))
         return msgnums[0].split()
