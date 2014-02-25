@@ -196,6 +196,10 @@ class ImapLibrary(object):
 
     def _check_emails(self, fromEmail, toEmail, status):
         crit = self._criteria(fromEmail, toEmail, status)
+        # Calling select before each search is necessary with gmail
+        status, data = self.imap.select()
+        if status != 'OK':
+            raise Exception('imap.select error: ' + status + ', ' + str(data))
         typ, msgnums = self.imap.search(None, *crit)
         if typ != 'OK':
             raise Exception('imap.search error: ' + typ + ', ' + str(msgnums) + ' criterion=' + str(crit))
