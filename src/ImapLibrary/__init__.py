@@ -39,13 +39,12 @@ class ImapLibrary(object):
         `timeout` sets the maximum waiting time until an error
         is raised.
         """
-        timeout = int(timeout)
-        while (timeout > 0):
+        endTime = time.time() + timeout
+        while (time.time() < endTime):
             self.mails = self._check_emails(fromEmail, toEmail, status)
             if len(self.mails) > 0:
                 return self.mails[-1]
-            timeout -= 10
-            if timeout > 0:
+            if time.time() < endTime:
                 time.sleep(10)
         raise AssertionError("No mail received within time")
 
@@ -130,7 +129,7 @@ class ImapLibrary(object):
         except StopIteration:
             self._init_walking_multipart()
             return False
-            
+
         # return number of parts
         return len(self._mp_msg.get_payload())
 
