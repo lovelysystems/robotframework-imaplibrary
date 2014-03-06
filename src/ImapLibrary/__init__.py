@@ -39,7 +39,7 @@ class ImapLibrary(object):
         `timeout` sets the maximum waiting time until an error
         is raised.
         """
-        endTime = time.time() + timeout
+        endTime = time.time() + int(timeout)
         while (time.time() < endTime):
             self.mails = self._check_emails(fromEmail, toEmail, status)
             if len(self.mails) > 0:
@@ -121,7 +121,7 @@ class ImapLibrary(object):
         """
         if not self._is_walking_multipart(mailNumber):
             data = self.imap.fetch(mailNumber, '(RFC822)')[1][0][1]
-            msg = email.message_from_string(data.decode())
+            msg = email.message_from_string(data)
             self._start_walking_multipart(mailNumber, msg)
 
         try:
