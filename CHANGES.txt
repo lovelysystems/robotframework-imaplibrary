@@ -2,6 +2,11 @@
 Changes for robotframework-imaplibrary
 ======================================
 
+2014/04/23 0.1.4
+================
+
+ - Fixed multipart-mime reading (thanks to Frank Berthold)
+
 2014/02/28 0.1.3
 ================
 
