@@ -86,6 +86,13 @@ class ImapLibrary(object):
         else:
             raise AssertionError("Link number %i not found!" % linkNumber)
 
+    def delete_email(self, mailNumber):
+        """
+        Delete the selected email.
+        """
+        body = self.imap.store(mailNumber, '+FLAGS', '\\Deleted')
+        self.imap.expunge()
+
     def close_mailbox(self):
         """
         Close the mailbox after finishing all mail activities of a user.
