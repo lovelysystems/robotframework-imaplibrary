@@ -6,16 +6,15 @@ robotframework-imaplibrary
 <http://code.google.com/p/robotframework/>`_ test library to test
 mail validation tasks.
 
-
 Deprecation Warning
 +++++++++++++++++++
 
 Lovely Systems does not not support this package anymore and 
-do not have any follow up package in the same area. If anyone is
-interested to continue our efforts and would like to 
-manage the contributors in this open source project,
-feel free to fork the package and give me a hint, so I can 
-create a link to your fork! 
+do not have any follow up package in the same area. 
+
+@rickypc iscontinues our work. You can find his fork and further infos at:
+
+https://github.com/rickypc/robotframework-imaplibrary
 
 best regards, Manfred (Github: schwendinger, schwendinger at lovelysystems.com)
 
