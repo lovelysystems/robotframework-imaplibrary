@@ -12,7 +12,7 @@ Deprecation Warning
 Lovely Systems does not not support this package anymore and 
 do not have any follow up package in the same area. 
 
-@rickypc iscontinues our work. You can find his fork and further infos at:
+@rickypc continues our work. You can find his fork and further infos at:
 
 https://github.com/rickypc/robotframework-imaplibrary
 
